@@ -4,6 +4,8 @@
 #define DYNAMIC_ARRAY_H
 
 #define INITIAL_CAPACITY 2
+#define INITIAL_LOGICAL_SIZE 0
+#define SCALE_FACTOR 2
 
 struct DynamicArray {
   int *elements;

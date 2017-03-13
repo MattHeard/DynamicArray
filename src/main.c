@@ -9,5 +9,5 @@ int main() {
     print(&array);
   }
   cleanUp(&array);
-  return 0;
+  return EXIT_SUCCESS;
 }

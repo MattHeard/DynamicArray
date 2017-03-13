@@ -7,7 +7,7 @@ void cleanUp(struct DynamicArray *array) {
 }
 
 void grow(struct DynamicArray *array) {
-  const size_t newCapacity = array->capacity * 2;
+  const size_t newCapacity = array->capacity * SCALE_FACTOR;
   void *elements = (void *) array->elements;
   array->elements = (int *) realloc(elements, newCapacity);
   array->capacity = newCapacity;
@@ -17,7 +17,7 @@ void initialise(struct DynamicArray *array) {
   const size_t size = INITIAL_CAPACITY * sizeof(int);
   array->elements = malloc(size);
   array->capacity = INITIAL_CAPACITY;
-  array->logicalSize = 0;
+  array->logicalSize = INITIAL_LOGICAL_SIZE;
 }
 
 void insert(struct DynamicArray *array, const int value) {
