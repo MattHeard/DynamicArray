@@ -3,8 +3,7 @@
 #include "dynamic_array.h"
 
 void cleanUp(struct DynamicArray *array) {
-  int *elements = array->elements;
-  free(elements);
+  free(array->elements);
 }
 
 void grow(struct DynamicArray *array) {
@@ -32,8 +31,7 @@ void insert(struct DynamicArray *array, const int value) {
 void print(struct DynamicArray *array) {
   printf("[ ");
   for (size_t i = 0; i < array->logicalSize; i++) {
-    const int element = array->elements[i];
-    printf("%d ", element);
+    printf("%d ", array->elements[i]);
   }
   printf("]\n");
 }
