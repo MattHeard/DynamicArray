@@ -9,8 +9,8 @@
 
 struct DynamicArray {
   int *elements;
-  int capacity;
-  int logicalSize;
+  size_t capacity;
+  size_t logicalSize;
 };
 
 void cleanUp(struct DynamicArray *array);
