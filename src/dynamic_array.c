@@ -8,8 +8,11 @@ void cleanUp(struct DynamicArray *array) {
 
 void grow(struct DynamicArray *array) {
   const size_t newCapacity = array->capacity * SCALE_FACTOR;
-  void *elements = (void *) array->elements;
-  array->elements = (int *) realloc(elements, newCapacity);
+  int *largerBuffer = realloc(array->elements, newCapacity * sizeof(int));
+  if (largerBuffer == NULL) {
+    abort();
+  }
+  array->elements = largerBuffer;
   array->capacity = newCapacity;
 }
 

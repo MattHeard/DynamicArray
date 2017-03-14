@@ -4,7 +4,8 @@ int main() {
   struct DynamicArray array;
   initialise(&array);
   print(&array);
-  for (size_t i = 0; i < 4; i++) {
+  const size_t numIterations = 17;
+  for (size_t i = 0; i < numIterations; i++) {
     insert(&array, i);
     print(&array);
   }
