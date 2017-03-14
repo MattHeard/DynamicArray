@@ -2,49 +2,59 @@
 #include <stdlib.h>
 #include "dynamic_array.h"
 
+#define CAPACITY_INDEX 0
+#define CAPACITY_FIELD_WIDTH 1
+
+size_t capacity(const struct DynamicArray *array) {
+  return array->data[CAPACITY_INDEX];
+}
+
 void cleanUp(struct DynamicArray *array) {
-  free(array->elements);
+  free(array->data);
 }
 
 void grow(struct DynamicArray *array) {
   const size_t newCapacity = largerCapacity(array);
-  printf("capacity changing from %zu to %zu\n", array->capacity, newCapacity);
-  int *largerBuffer = realloc(array->elements, newCapacity * sizeof(int));
+  printf("capacity changing from %zu to %zu\n", capacity(array), newCapacity);
+  const size_t largerBufferWidth = CAPACITY_FIELD_WIDTH + newCapacity;
+  int *largerBuffer = realloc(array->data, largerBufferWidth * sizeof(int));
   if (largerBuffer == NULL) {
     abort();
   }
-  array->elements = largerBuffer;
-  array->capacity = newCapacity;
+  array->data = largerBuffer;
+  array->data[CAPACITY_INDEX] = newCapacity;
 }
 
 void initialise(struct DynamicArray *array, const size_t initialCapacity,
     const double scaleFactor) {
-  const size_t size = initialCapacity * sizeof(int);
-  array->elements = malloc(size);
-  if (array->elements == NULL) {
+  const size_t bufferWidth = CAPACITY_FIELD_WIDTH + initialCapacity;
+  array->data = malloc(bufferWidth * sizeof(int));
+  if (array->data == NULL) {
     abort();
   }
-  array->capacity = initialCapacity;
+  array->data[CAPACITY_INDEX] = initialCapacity;
   array->logicalSize = INITIAL_LOGICAL_SIZE;
   array->scaleFactor = scaleFactor;
 }
 
 void insert(struct DynamicArray *array, const int value) {
-  if (array->capacity == array->logicalSize) {
+  if (capacity(array) == array->logicalSize) {
     grow(array);
   }
-  array->elements[array->logicalSize] = value;
+  const size_t elementIndex = CAPACITY_FIELD_WIDTH + array->logicalSize;
+  array->data[elementIndex] = value;
   (array->logicalSize)++;
 }
 
-const size_t largerCapacity(const struct DynamicArray *array) {
-  return array->capacity * array->scaleFactor;
+size_t largerCapacity(const struct DynamicArray *array) {
+  return capacity(array) * array->scaleFactor;
 }
 
 void print(struct DynamicArray *array) {
   printf("[ ");
   for (size_t i = 0; i < array->logicalSize; i++) {
-    printf("%d ", array->elements[i]);
+    const size_t elementIndex = CAPACITY_FIELD_WIDTH + i;
+    printf("%d ", array->data[elementIndex]);
   }
   printf("]\n");
 }
