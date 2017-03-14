@@ -7,7 +7,8 @@ void cleanUp(struct DynamicArray *array) {
 }
 
 void grow(struct DynamicArray *array) {
-  const size_t newCapacity = array->capacity * SCALE_FACTOR;
+  const size_t newCapacity = largerCapacity(array);
+  printf("capacity changing from %zu to %zu\n", array->capacity, newCapacity);
   int *largerBuffer = realloc(array->elements, newCapacity * sizeof(int));
   if (largerBuffer == NULL) {
     abort();
@@ -16,11 +17,16 @@ void grow(struct DynamicArray *array) {
   array->capacity = newCapacity;
 }
 
-void initialise(struct DynamicArray *array) {
-  const size_t size = INITIAL_CAPACITY * sizeof(int);
+void initialise(struct DynamicArray *array, const size_t initialCapacity,
+    const double scaleFactor) {
+  const size_t size = initialCapacity * sizeof(int);
   array->elements = malloc(size);
-  array->capacity = INITIAL_CAPACITY;
+  if (array->elements == NULL) {
+    abort();
+  }
+  array->capacity = initialCapacity;
   array->logicalSize = INITIAL_LOGICAL_SIZE;
+  array->scaleFactor = scaleFactor;
 }
 
 void insert(struct DynamicArray *array, const int value) {
@@ -29,6 +35,10 @@ void insert(struct DynamicArray *array, const int value) {
   }
   array->elements[array->logicalSize] = value;
   (array->logicalSize)++;
+}
+
+const size_t largerCapacity(const struct DynamicArray *array) {
+  return array->capacity * array->scaleFactor;
 }
 
 void print(struct DynamicArray *array) {
